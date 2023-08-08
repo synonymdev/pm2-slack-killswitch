@@ -1,7 +1,6 @@
 module.exports = {
     slack: {
-        signingSecret: "b6215...7714",
-        botToken: "ad...28d",
-        appToken: "asd..asdf"
+        botToken: "xoxb-1111111111111-1111111111111-xxxxxxxxxxxxxxxxxxxxxxxx",
+        appToken: "xapp-1-xxxxxxxxxxx-xxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     }
 }
