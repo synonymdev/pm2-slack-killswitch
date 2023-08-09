@@ -1,3 +1,5 @@
+const humanizeDuration = require("humanize-duration");
+
 export class Pm2Process {
     constructor(public data: any) {}
 
@@ -23,6 +25,16 @@ export class Pm2Process {
 
     get cpu(): number {
         return this.data.monit?.cpu || 0
+    }
+
+    get startedAt(): Date {
+        const timestamp = this.data.pm2_env.created_at || 0
+        return new Date(timestamp)
+    }
+
+    get humanizedUptime(): string {
+        const uptime = Date.now() - this.startedAt.getTime()
+        return humanizeDuration(uptime, { largest: 1, round: true })
     }
 
     get status(): 'online' | 'stopped' | 'unknown' {

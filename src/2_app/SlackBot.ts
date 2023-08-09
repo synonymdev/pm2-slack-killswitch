@@ -1,6 +1,5 @@
 import { App } from '@slack/bolt'
 import { AppConfig } from '../0_config/AppConfig';
-import { sleep } from '../0_helpers/sleep';
 import { Pm2Api } from '../1_pm2/Pm2Api';
 
 const config = AppConfig.get()
@@ -41,6 +40,12 @@ export class SlackBot {
                 args.say(`<@${args.context.userId}> stopped \`${value}\`.`)
             } else if (actionId === 'button_process_refresh') {
                 // List is refresh automatically after every command.
+            } else if (actionId === 'button_process_start_all') {
+                const stopped = (await this.pm2.list('blocktank')).filter(pro => pro.status === 'stopped')
+                for (const pro of stopped) {
+                    await this.pm2.start(pro.name)
+                }
+                args.say(`<@${args.context.userId}> started all processes.`)
             } else if (actionId === 'button_process_stop_all') {
                 const runningProcesses = (await this.pm2.list('blocktank')).filter(pro => pro.status === 'online')
                 for (const pro of runningProcesses) {
@@ -85,7 +90,7 @@ export class SlackBot {
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": `<!date^${Math.round(Date.now()/1000)}^Last updated {date_num} {time_secs}|Last updated ${new Date().toISOString()}> by <@${userId}>.`
+                    "text": `Last updated <!date^${Math.round(Date.now()/1000)}^{date_num} {time_secs}|${new Date().toISOString()}> by <@${userId}>.`
                 },
             ]
         }
@@ -150,13 +155,13 @@ export class SlackBot {
                 emoji = '🔴'
             }
 
-            const memory = (pro.memory/10**6).toFixed(1) + 'MB'
+            const memory = (pro.memory/10**6).toFixed(1)
             const context = {
                 "type": "context",
                 "elements": [
                     {
                         "type": "mrkdwn",
-                        "text": `${pro.status} ${emoji} Memory: ${memory}, CPU: ${pro.cpu}, Unstable restarts: ${pro.unstableRestarts}`
+                        "text": `${pro.status} ${emoji} Memory: ${memory}MB, CPU: ${pro.cpu}%, Unstable restarts: ${pro.unstableRestarts}, Uptime: ${pro.humanizedUptime}`
                     },
                 ]
             }
@@ -194,11 +199,21 @@ export class SlackBot {
                     "type": "button",
                     "text": {
                         "type": "plain_text",
+                        "text": "Start all processes"
+                    },
+                    "value": `all`,
+                    "action_id": `button_process_start_all`
+                },
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
                         "text": "Stop all processes"
                     },
                     "value": `all`,
                     "action_id": `button_process_stop_all`
-                }
+                },
+
             ]
         }
 
