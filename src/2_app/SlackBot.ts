@@ -18,7 +18,7 @@ export class SlackBot {
         console.log('register commands')
         this.app.command('/killswitch-list', async (args) => {
             await args.ack()
-            const blocks = await this.listProcesses()
+            const blocks = await this.listProcesses(args.context.userId)
             console.log(JSON.stringify(blocks))
             await args.say({
                 blocks: blocks
@@ -26,7 +26,7 @@ export class SlackBot {
         })
 
         this.app.action(/^button_process_\w*$/, async args => {
-            args.ack()
+            
             const value = (args.action as any).value
             const actionId = (args.action as any).action_id
             console.log('Received command', args.action)
@@ -39,11 +39,20 @@ export class SlackBot {
             } else if (actionId === 'button_process_stop') {
                 await this.pm2.stop(value)
                 args.say(`<@${args.context.userId}> stopped \`${value}\`.`)
+            } else if (actionId === 'button_process_refresh') {
+                // List is refresh automatically after every command.
+            } else if (actionId === 'button_process_stop_all') {
+                const runningProcesses = (await this.pm2.list('blocktank')).filter(pro => pro.status === 'online')
+                for (const pro of runningProcesses) {
+                    await this.pm2.stop(pro.name)
+                }
+                args.say(`<@${args.context.userId}> stopped all processes.`)
             } else {
                 args.say(`<@${args.context.userId}> Unknown action`)
             }
 
-            const newList = await this.listProcesses()
+            const newList = await this.listProcesses(args.context.userId)
+            args.ack()
             args.client.chat.update({
                 channel: args.body.channel.id,
                 ts: (args.body as any).container.message_ts,
@@ -55,8 +64,8 @@ export class SlackBot {
         await this.app.start()
     }
 
-    private async listProcesses() {
-        const processes = await this.pm2.list()
+    private async listProcesses(userId: string) {
+        const processes = (await this.pm2.list('blocktank'))
         const divider = {
             "type": "divider"
           }
@@ -65,20 +74,22 @@ export class SlackBot {
             "fields": [
                 {
                     "type": "mrkdwn",
-                    "text": "*List PM2 Processes*"
+                    "text": "*All Blocktank PM2 Processes*"
                   },
 
             ]
         }
-        const headerBlock2 = {
-            "type": "section",
-            "fields": [
+
+        const contextHeader = {
+            "type": "context",
+            "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": "Here is a list of all pm2 processes on this server:\n"
-                }
+                    "text": `<!date^${Math.round(Date.now()/1000)}^Last updated {date_num} {time_secs}|Last updated ${new Date().toISOString()}> by <@${userId}>.`
+                },
             ]
         }
+
         const processBlocks = processes.map(pro => {
             const onlineButtons = {
                 "type": "actions",
@@ -166,12 +177,37 @@ export class SlackBot {
             ]
         })
 
+        const globalActions = {
+            "type": "actions",
+            "block_id": `actions_gobal`,
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "Refresh list"
+                    },
+                    "value": `all`,
+                    "action_id": `button_process_refresh`
+                },
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "Stop all processes"
+                    },
+                    "value": `all`,
+                    "action_id": `button_process_stop_all`
+                }
+            ]
+        }
+
         return [
             divider,
             headerBlock1,
-            headerBlock2,
+            contextHeader,
+            globalActions,
             ...processBlocks.flatMap(arr => arr),
-            
         ]
     }
 
