@@ -1,4 +1,5 @@
 import { Pm2Process } from "../1_pm2/Pm2Process"
+import { SlackActionArg } from "./SlackBot"
 
 const divider = {
     "type": "divider"
@@ -172,5 +173,9 @@ export class ProcessList {
             this.renderGlobalActions(),
             ...this.processes.map(pro => this.renderProcess(pro)).flatMap(arr => arr),
         ]
+    }
+
+    async processAction(args: SlackActionArg){
+
     }
 }
