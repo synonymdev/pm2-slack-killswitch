@@ -6,6 +6,16 @@ export class TwoFactorModal {
     constructor(public channelId: string, public messageTs: string, public action: TwoFactorModalAction, public name?: string) {}
 
     render(): ModalView {
+        let description = ''
+        if (this.name) {
+            description= `You are about to \`${this.action}\` the process \`${this.name? this.name: ''}\`.`
+        } else {
+            if (this.action === 'start_all') {
+                description = `You are about to \`start\` \`ALL\` processes.`
+            } else if (this.action === 'stop_all') {
+                description = `You are about to \`stop\` \`ALL\` processes.`
+            }
+        }
         return {
             "type": "modal",
             "callback_id": "2fa_modal",
@@ -17,7 +27,7 @@ export class TwoFactorModal {
             }),
             "title": {
                 "type": "plain_text",
-                "text": "Modal Title"
+                "text": "2FA required"
             },
             "submit": {
                 "type": "plain_text",
@@ -29,7 +39,7 @@ export class TwoFactorModal {
                     "elements": [
                         {
                             "type": "mrkdwn",
-                            "text": `You are about to \`${this.action}\` the process \`${this.name}\`. Enter your 2FA code below to complete the action.`
+                            "text": `${description} Enter your 2FA code below to complete the action.`
                         }
                     ]
                 },
@@ -41,7 +51,7 @@ export class TwoFactorModal {
                         "action_id": "twofa",
                         "placeholder": {
                             "type": "plain_text",
-                            "text": "Enter your 2 factor authentication code."
+                            "text": "Enter your 2-factor authentication code."
                         }
                     },
                     "label": {

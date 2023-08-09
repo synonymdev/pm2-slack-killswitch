@@ -4,6 +4,6 @@ export const defaultConfig: IConfig = {
     slack: {
         botToken: undefined,
         appToken: undefined,
-        whiteListedUserIds:[]
-    }
+    },
+    users: []
 }

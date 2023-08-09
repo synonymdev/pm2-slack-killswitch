@@ -4,6 +4,7 @@ import { Pm2Api } from '../1_pm2/Pm2Api';
 import { ProcessList } from './ProcessList';
 import { TwoFactorModal, TwoFactorModalAction } from './TwoFactorModal';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers';
+import { AuthService } from './AuthService';
 
 const config = AppConfig.get()
 
@@ -18,15 +19,13 @@ export class SlackBot {
         appToken: config.slack.appToken,
     });
 
-    private isUserWhitelisted(userId: string) {
-        return config.slack.whiteListedUserIds.includes(userId)
-    }
+
 
     async start() {
 
         this.app.command('/killswitch-list', async (args) => {
             await args.ack()
-            if (!this.isUserWhitelisted(args.context.userId))  {
+            if (!AuthService.isWhitelisted(args.context.userId))  {
                 await args.say('Permission denied. Add your slack user id to `config.js` to gain access.')
                 return
             }
@@ -44,8 +43,9 @@ export class SlackBot {
             const channelId = metadata.channelId
             const messageTs = metadata.messageTs
 
-            await args.ack()
-            if (!this.isUserWhitelisted(args.context.userId))  {
+            
+            if (!AuthService.isWhitelisted(args.context.userId))  {
+                await args.ack()
                 await args.client.chat.postMessage({
                     channel: channelId,
                     mrkdwn: true,
@@ -53,8 +53,17 @@ export class SlackBot {
                 })
                 return
             }
+            if (!AuthService.isValid2FaCode(code, args.context.userId)) {
+                await args.ack({
+                    "response_action": "errors",
+                    "errors": {
+                      "twofa_block": "Invalid 2FA code."
+                    }
+                  })
+                return
+            }
 
-
+            await args.ack()
             if (action === 'start') {
                 await this.pm2.start(name)
                 await args.client.chat.postMessage({
@@ -115,7 +124,7 @@ export class SlackBot {
             console.log('Received command', args.action, args.context)
 
             await args.ack()
-            if (!this.isUserWhitelisted(args.context.userId))  {
+            if (!AuthService.isWhitelisted(args.context.userId))  {
                 await args.say('Permission denied. Add your slack user id to `config.js` to gain access.')
                 return
             }
@@ -140,7 +149,7 @@ export class SlackBot {
             }
 
             
-            await this.updateProcessList((args.body as any).container.message_ts, args.body.channel.id, args.context.id) 
+            await this.updateProcessList((args.body as any).container.message_ts, args.body.channel.id, args.context.userId) 
         })
 
         await this.app.start()

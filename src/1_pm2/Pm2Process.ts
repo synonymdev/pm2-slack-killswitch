@@ -28,13 +28,18 @@ export class Pm2Process {
     }
 
     get startedAt(): Date {
-        const timestamp = this.data.pm2_env.created_at || 0
+        const timestamp = this.data.pm2_env.pm_uptime || 0
         return new Date(timestamp)
     }
 
     get humanizedUptime(): string {
-        const uptime = Date.now() - this.startedAt.getTime()
-        return humanizeDuration(uptime, { largest: 1, round: true })
+        if (this.status === 'online'){
+            const uptime = Date.now() - this.startedAt.getTime()
+            return humanizeDuration(uptime, { largest: 1, round: true })
+        } else {
+            return '-'
+        }
+
     }
 
     get status(): 'online' | 'stopped' | 'unknown' {
