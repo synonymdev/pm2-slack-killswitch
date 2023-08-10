@@ -11,5 +11,6 @@ export interface IConfig {
         appToken: string,
         channelId: string
     },
-    users: AppUser[]
+    users: AppUser[],
+    pm2ProcessFilter: string
 }

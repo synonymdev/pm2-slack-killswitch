@@ -6,5 +6,6 @@ export const defaultConfig: IConfig = {
         appToken: undefined,
         channelId: undefined
     },
-    users: []
+    users: [],
+    pm2ProcessFilter: ''
 }

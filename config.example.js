@@ -10,5 +10,6 @@ module.exports = {
             slackUserId: 'U04GXT6RS22', // Slack user. Go to user profile, extended menu button, and click Copy member id.
             oneTimePasswordSecret: "MFZWM===" // One time password secret. Base32 encoded value of at least 160bits aka. 20 bytes aka. 20 characters.
         }
-    ]
+    ],
+    pm2ProcessFilter: 'blocktank' // Only show processes that include that string.
 }

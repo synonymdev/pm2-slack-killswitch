@@ -1,15 +1,21 @@
-# blocktank-util-slack
+# PM2 Slack Killswitch
 
-A Slack bot for BlockTank. You can configure multiple channels and other workers can use them.
+A Slack bot for pm2 to start/stop processes.
+
+- User whitelist.
+- 2-Factor authentication.
+- Logs to a Slack channel.
 
 ## Usage
 
-Configure the bot with the `config.json` file. Checkout [config.example.json]('./config.example.json') for an example.
+Configure the bot with the `config.js` file. Checkout [config.example.js]('./config.example.js') for an example.
 
 * `npm run build` - Build the bot.
 * `npm run start` - Start the bot.
-* `npm run send-test-message -- {myConfiguredChannelName}` - Send a test message to a specific channel by name.
 
+## Slack
+
+Run `/killswitch-list` to list all processes.
 
 ### pm2
 
@@ -17,5 +23,5 @@ A `ecosystem.config.js` is provided to run the service with [pm2](https://pm2.ke
 
 - Build typescript to javascript: `npm run build`.
 - Start service: `pm2 start ecosystem.config.js`.
-  - Watcher logs: `pm2 logs blocktank-util-slack`.
+  - Watcher logs: `pm2 logs pm2-slack-killswitch`.
 - Stop service: `pm2 stop ecosystem.config.js`.

@@ -67,7 +67,7 @@ export class TwoFactorModal {
                 })
             } else if (action === 'start_all') {
                 console.log('User:', userName, 'Action:', action, 'Process:', name)
-                const stopped = (await Pm2Service.list('blocktank')).filter(pro => pro.status === 'stopped')
+                const stopped = (await Pm2Service.list(config.pm2ProcessFilter)).filter(pro => pro.status === 'stopped')
                 for (const pro of stopped) {
                     await Pm2Service.start(pro.name)
                 }
@@ -78,7 +78,7 @@ export class TwoFactorModal {
                 })
             } else if (action === 'stop_all') {
                 console.log('User:', userName, 'Action:', action, 'Process:', name)
-                const runningProcesses = (await Pm2Service.list('blocktank')).filter(pro => pro.status === 'online')
+                const runningProcesses = (await Pm2Service.list(config.pm2ProcessFilter)).filter(pro => pro.status === 'online')
                 for (const pro of runningProcesses) {
                     await Pm2Service.stop(pro.name)
                 }
