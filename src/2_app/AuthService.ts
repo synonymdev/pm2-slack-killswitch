@@ -14,6 +14,15 @@ export class AuthService {
         return config.users.find(user => user.slackUserId === userId)
     }
 
+    static getUserName(userId: string) {
+        const user = AuthService.getUser(userId)
+        if (!user) {
+            return userId
+        }
+
+        return `${user.name} ${user.slackUserId}`
+    }
+
     public static isValid2FaCode(code: string, userId: string): boolean {
         const user = AuthService.getUser(userId)
         if (!user) {

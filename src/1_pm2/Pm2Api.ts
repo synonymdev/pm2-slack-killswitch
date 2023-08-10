@@ -1,8 +1,8 @@
 import pm2 from 'pm2'
 import { Pm2Process } from './Pm2Process'
 
-export class Pm2Api {
-    async connect() {
+export class Pm2Service {
+    static async connect() {
         return new Promise<void>((resolve, reject) => {
             pm2.connect((err) => {
                 if (err) {
@@ -14,11 +14,11 @@ export class Pm2Api {
         })
     }
 
-    async disconnect() {
+    static async disconnect() {
         pm2.disconnect()
     }
 
-    async list(includes?: string) {
+    static async list(includes?: string) {
         return new Promise<Pm2Process[]>((resolve, reject) => {
             pm2.list((err, list) => {
                 if (err) {
@@ -36,7 +36,7 @@ export class Pm2Api {
         })
     }
 
-    async stop(processName: string){
+    static async stop(processName: string){
         return new Promise<void>((resolve, reject) => {
             pm2.stop(processName, err => {
                 if (err) {
@@ -47,7 +47,7 @@ export class Pm2Api {
         })
     }
 
-    async start(processName: string){
+    static async start(processName: string){
         return new Promise<void>((resolve, reject) => {
             pm2.start({name: processName}, err => {
                 if (err) {
@@ -58,7 +58,7 @@ export class Pm2Api {
         })
     }
 
-    async restart(processName: string){
+    static async restart(processName: string){
         return new Promise<void>((resolve, reject) => {
             pm2.restart(processName, err => {
                 if (err) {
