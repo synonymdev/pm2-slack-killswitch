@@ -15,6 +15,16 @@ Configure the bot with the `config.js` file. Checkout [config.example.js]('./con
 
 ## Slack
 
+### Install
+
+- [Create](https://api.slack.com/apps) a new Slack app.
+- Choose from an app manifest.
+- Select your workspace.
+- Copy content of [app_manifest.json](./app_manifest.json) to the text area.
+- Create.
+- Install to workspace.
+- Add app `pm2-slack-killswitch` to the log channel.
+
 Run `/killswitch-list` to list all processes.
 
 ### pm2
