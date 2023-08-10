@@ -6,16 +6,9 @@ A Slack bot for pm2 to start/stop processes.
 - 2-Factor authentication.
 - Logs to a Slack channel.
 
-## Usage
+## Getting Started
 
-Configure the bot with the `config.js` file. Checkout [config.example.js]('./config.example.js') for an example.
-
-* `npm run build` - Build the bot.
-* `npm run start` - Start the bot.
-
-## Slack
-
-### Install
+### Register Slack App
 
 - [Create](https://api.slack.com/apps) a new Slack app.
 - Choose from an app manifest.
@@ -25,9 +18,18 @@ Configure the bot with the `config.js` file. Checkout [config.example.js]('./con
 - Install to workspace.
 - Add app `pm2-slack-killswitch` to the log channel.
 
+### Configure
+
+Configure the bot with the `config.js` file. Checkout [config.example.js]('./config.example.js') for an example.
+
+* `npm run build` - Build the bot.
+* `npm run start` - Start the bot.
+
+### Usage
+
 Run `/killswitch-list` to list all processes.
 
-### pm2
+## pm2
 
 A `ecosystem.config.js` is provided to run the service with [pm2](https://pm2.keymetrics.io/).
 

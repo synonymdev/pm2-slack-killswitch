@@ -1,7 +1,7 @@
 module.exports = {
     slack: {
         botToken: "xoxb-1111111111111-1111111111111-xxx...", // Got to your App, OAuth & Permissions, OAuth Tokens for Your Workspace
-        appToken: "xapp-1-xxxxxxxxxxx-xxxxxxxxxxxxx-xxx...", // Go to your App, Basic Information, App-Level Tokens,
+        appToken: "xapp-1-xxxxxxxxxxx-xxxxxxxxxxxxx-xxx...", // Go to your App, Basic Information, App-Level Tokens. I needs connections:write only.
         channelId: "C05..." // ID of the channel the bot will log to.
     },
     users: [
@@ -11,5 +11,5 @@ module.exports = {
             oneTimePasswordSecret: "MFZWM===" // One time password secret. Base32 encoded value of at least 160bits aka. 20 bytes aka. 20 characters.
         }
     ],
-    pm2ProcessFilter: 'blocktank' // Only show processes that include that string.
+    pm2ProcessFilters: ['^blocktank-.*$'] // Only show processes that match one of these regex.
 }

@@ -4,11 +4,13 @@ import { AuthService } from "./AuthService"
 import { Pm2Service } from "../1_pm2/Pm2Api"
 import { TwoFactorModal } from "./TwoFactorModal"
 import { IViewId } from "./IViewId"
+import { AppConfig } from "../0_config/AppConfig"
 
 const divider = {
     "type": "divider"
 }
 
+const config = AppConfig.get()
 
 export class ProcessesModal {
     private twoFa: TwoFactorModal
@@ -214,7 +216,7 @@ export class ProcessesModal {
     }
 
     private async render(): Promise<ModalView> {
-        const processes = await Pm2Service.list()
+        const processes = await Pm2Service.listFiltered(config.pm2ProcessFilters)
         const contextHeader = {
             "type": "context",
             "elements": [

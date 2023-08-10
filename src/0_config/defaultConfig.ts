@@ -7,5 +7,5 @@ export const defaultConfig: IConfig = {
         channelId: undefined
     },
     users: [],
-    pm2ProcessFilter: ''
+    pm2ProcessFilters: ['.*']
 }
