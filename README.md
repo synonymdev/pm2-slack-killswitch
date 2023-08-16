@@ -27,7 +27,7 @@ cd pm2-slack-killswitch
 npm i
 ```
 
-Configure the bot with the `config.js` file. Checkout [config.example.js]('./config.example.js') for an example.
+Configure the bot with the `config.js` file. Checkout [config.example.js](./config.example.js) for an example.
 
 Run `npm run start` to start the bot.
 
