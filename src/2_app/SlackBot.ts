@@ -1,4 +1,4 @@
-import { AllMiddlewareArgs, App, SlackAction, SlackActionMiddlewareArgs } from '@slack/bolt'
+import { AllMiddlewareArgs, App, LogLevel, SlackAction, SlackActionMiddlewareArgs } from '@slack/bolt'
 import { AppConfig } from '../0_config/AppConfig';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers';
 import { ProcessesModal } from './ProcessesModal';
@@ -12,6 +12,7 @@ export class SlackBot {
         token: config.slack.botToken,
         socketMode: true,
         appToken: config.slack.appToken,
+        logLevel: LogLevel.WARN
     });
 
     async start() {

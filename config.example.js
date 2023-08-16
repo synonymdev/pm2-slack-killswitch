@@ -11,5 +11,5 @@ module.exports = {
             oneTimePasswordSecret: "MFZWM===" // One time password secret. Base32 encoded value of at least 160bits aka. 20 bytes aka. 20 characters.
         }
     ],
-    pm2ProcessFilters: ['^blocktank-.*$'] // Only show processes that match one of these regex.
+    pm2ProcessFilters: ['^.*$'] // Only show processes that match one of these regex.
 }

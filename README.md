@@ -18,14 +18,20 @@ A Slack bot for pm2 to start/stop processes.
 - Install to workspace.
 - Add app `pm2-slack-killswitch` to the log channel.
 
-### Configure
+### Setup Bot
+
+
+```
+git clone https://github.com/synonymdev/pm2-slack-killswitch.git
+cd pm2-slack-killswitch
+npm i
+```
 
 Configure the bot with the `config.js` file. Checkout [config.example.js]('./config.example.js') for an example.
 
-* `npm run build` - Build the bot.
-* `npm run start` - Start the bot.
+Run `npm run start` to start the bot.
 
-### Usage
+### Slack Usage
 
 Run `/killswitch-list` to list all processes.
 
